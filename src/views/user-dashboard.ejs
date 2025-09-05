@@ -1,0 +1,186 @@
+<!-- src/views/user-dashboard.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Mountain Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-color: #6c5ce7;
+      --primary-hover: #5541e0;
+      --secondary-color: #a29bfe;
+      --dark-purple: #2c2157;
+      --light-color: #f9fafb;
+      --danger-color: #e84393;
+      --success-color: #00b894;
+      --border-color: rgba(255, 255, 255, 0.2);
+      --text-color: #fff;
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      line-height: 1.5;
+      color: var(--text-color);
+      min-height: 100vh;
+      background: linear-gradient(180deg, #a7b3df 0%, #6c5ce7 50%, #2c2157 100%);
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    .dashboard-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dashboard-header {
+      background-color: rgba(44, 33, 87, 0.8);
+      backdrop-filter: blur(5px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .username {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .role {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .btn-logout {
+      color: white;
+      background-color: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background-color: white;
+      color: var(--dark-purple);
+    }
+
+    .dashboard-main {
+      flex: 1;
+      padding: 3rem 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .welcome-card {
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      padding: 2.5rem;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .welcome-card h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .welcome-card p {
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
+
+    .dashboard-footer {
+      background-color: rgba(44, 33, 87, 0.8);
+      backdrop-filter: blur(5px);
+      padding: 1rem;
+      text-align: center;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .dashboard-main {
+        padding: 2rem 1rem;
+      }
+
+      .welcome-card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <a href="/dashboard" class="logo">Mountain Auth</a>
+      
+      <div class="user-info">
+        <span class="username"><%= user.username %></span>
+        <span class="role"><%= user.role %></span>
+        <a href="/auth/logout" class="btn-logout">Logout</a>
+      </div>
+    </header>
+    
+    <main class="dashboard-main">
+      <div class="welcome-card">
+        <h1>Welcome, <%= user.username %>!</h1>
+        <p>You have successfully logged in to Mountain Auth.</p>
+        <p>Your account has regular user privileges.</p>
+        
+        <% if (user.role === 'user') { %>
+          <p>If you need admin access, please contact an administrator.</p>
+        <% } %>
+      </div>
+    </main>
+    
+    <footer class="dashboard-footer">
+      <p>&copy; <%= new Date().getFullYear() %> Mountain Auth | Beautifully Secure</p>
+    </footer>
+  </div>
+</body>
+</html>

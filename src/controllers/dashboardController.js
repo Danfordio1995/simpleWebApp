@@ -11,7 +11,7 @@ module.exports = {
     }
     
     try {
-      // If user is an admin, fetch statistics
+      // If user is an admin, fetch statistics and render admin dashboard
       if (req.session.user.role === 'admin') {
         // Get all users count
         const userCount = await User.countDocuments();
@@ -28,22 +28,17 @@ module.exports = {
           .sort({ createdAt: -1 })
           .limit(5);
         
-        // Pass all data to the template
-        return res.render('dashboard', { 
+        // Pass all data to the admin dashboard template
+        return res.render('admin-dashboard', { 
           user: req.session.user,
           userCount,
           usersByRole,
           latestUsers
         });
       } else {
-        // For regular users, render a simpler dashboard
-        // Create a welcome card with user info
-        return res.render('dashboard', { 
-          user: req.session.user,
-          // Provide empty values to prevent errors
-          userCount: 0,
-          usersByRole: [],
-          latestUsers: []
+        // For regular users, render a user dashboard
+        return res.render('user-dashboard', { 
+          user: req.session.user
         });
       }
     } catch (err) {
