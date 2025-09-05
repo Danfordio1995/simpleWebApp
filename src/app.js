@@ -19,6 +19,7 @@ const app = express();
 const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const staticRoutes = require('./routes/staticRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
@@ -96,6 +97,7 @@ app.use('/', staticRoutes);
 // Routes
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/admin', adminRoutes); 
 
 // Home route
 app.get('/', (req, res) => {

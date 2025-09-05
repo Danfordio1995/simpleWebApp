@@ -607,31 +607,36 @@
       </div>
       
       <!-- User Distribution Chart -->
-      <div class="user-distribution">
-        <div class="section-header">
-          <div class="section-title">User Distribution</div>
-        </div>
-        
-        <div class="distribution-chart">
-          <% const adminPercentage = (usersByRole.find(r => r.role === 'admin').count / userCount) * 100 %>
-          <% const userPercentage = 100 - adminPercentage %>
-          
-          <div class="chart-segment" style="width: <%= adminPercentage %>%; background-color: rgba(232, 67, 147, 0.7);"></div>
-          <div class="chart-segment" style="width: <%= userPercentage %>%; background-color: rgba(108, 92, 231, 0.7);"></div>
-        </div>
-        
-        <div class="chart-legend">
-          <div class="legend-item">
-            <div class="legend-color" style="background-color: rgba(232, 67, 147, 0.7);"></div>
-            <div>Administrators (<%= Math.round(adminPercentage) %>%)</div>
-          </div>
-          <div class="legend-item">
-            <div class="legend-color" style="background-color: rgba(108, 92, 231, 0.7);"></div>
-            <div>Regular Users (<%= Math.round(userPercentage) %>%)</div>
-          </div>
-        </div>
-      </div>
+<div class="user-distribution">
+  <div class="section-header">
+    <div class="section-title">User Distribution</div>
+  </div>
+  
+  <div class="distribution-chart">
+    <% 
+      // Handle potentially undefined values
+      const adminRole = usersByRole && usersByRole.find ? usersByRole.find(r => r.role === 'admin') : null;
+      const adminCount = adminRole ? adminRole.count : 0;
+      const totalUsers = userCount || 0;
       
+      // Calculate percentages with safety checks
+      const adminPercentage = totalUsers > 0 ? Math.round((adminCount / totalUsers) * 100) : 0;
+      const userPercentage = 100 - adminPercentage;
+    %>
+    
+  </div>
+  
+  <div class="chart-legend">
+    <div class="legend-item">
+      <div class="legend-color" style="background-color: rgba(232, 67, 147, 0.7);"></div>
+      <div>Administrators (<%= adminPercentage %>%)</div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background-color: rgba(108, 92, 231, 0.7);"></div>
+      <div>Regular Users (<%= userPercentage %>%)</div>
+    </div>
+  </div>
+</div>
       <!-- Latest Users -->
       <div class="latest-users">
         <div class="section-header">
