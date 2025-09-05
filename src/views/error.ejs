@@ -1,0 +1,210 @@
+<!-- src/views/error.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error | Mountain Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-color: #6c5ce7;
+      --primary-hover: #5541e0;
+      --secondary-color: #a29bfe;
+      --dark-purple: #2c2157;
+      --light-color: #f9fafb;
+      --danger-color: #e84393;
+      --success-color: #00b894;
+      --border-color: rgba(255, 255, 255, 0.2);
+      --text-color: #fff;
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      line-height: 1.5;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #a7b3df 0%, #6c5ce7 50%, #2c2157 100%);
+      background-size: cover;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 450px;
+      padding: 2rem;
+      z-index: 1;
+    }
+
+    /* Error Card */
+    .card {
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      position: relative;
+      border-top: 5px solid var(--danger-color);
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    .card-header {
+      padding: 2rem 1.5rem 1rem;
+      text-align: center;
+    }
+
+    .title {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* Alert */
+    .alert {
+      position: relative;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid transparent;
+      border-radius: 0.75rem;
+      font-weight: 500;
+    }
+
+    .alert-danger {
+      color: #fff;
+      background-color: rgba(232, 67, 147, 0.2);
+      border-color: rgba(232, 67, 147, 0.4);
+      backdrop-filter: blur(5px);
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    /* Button */
+    .btn {
+      display: inline-block;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      user-select: none;
+      border: 1px solid transparent;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: 2rem;
+      transition: all 0.15s ease-in-out;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      width: 100%;
+      color: white;
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      box-shadow: 0 4px 10px rgba(108, 92, 231, 0.5);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      border-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(108, 92, 231, 0.6);
+    }
+
+    /* Mountain background */
+    .mountain {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40vh;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .mountain::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%232c2157' fill-opacity='1' d='M0,288L48,272C96,256,192,224,288,213.3C384,203,480,213,576,229.3C672,245,768,267,864,261.3C960,256,1056,224,1152,218.7C1248,213,1344,235,1392,245.3L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3Cpath fill='%231c1540' fill-opacity='0.8' d='M0,192L30,208C60,224,120,256,180,261.3C240,267,300,245,360,224C420,203,480,181,540,186.7C600,192,660,224,720,218.7C780,213,840,171,900,170.7C960,171,1020,213,1080,218.7C1140,224,1200,192,1260,170.7C1320,149,1380,139,1410,133.3L1440,128L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+      background-position: bottom;
+      background-repeat: repeat-x;
+      background-size: cover;
+    }
+
+    /* Animations */
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-1px, 0, 0); }
+      20%, 80% { transform: translate3d(2px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+      40%, 60% { transform: translate3d(4px, 0, 0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Mountain background -->
+  <div class="mountain"></div>
+  
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h1 class="title">Error</h1>
+      </div>
+      
+      <div class="card-body">
+        <div class="alert alert-danger">
+          <%= error %>
+        </div>
+        
+        <div class="form-group" style="text-align: center; margin-top: 1.5rem;">
+          <a href="/" class="btn btn-primary">Go Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Add some subtle parallax effect
+    document.addEventListener('mousemove', function(e) {
+      const moveX = (e.clientX - window.innerWidth / 2) * 0.005;
+      const moveY = (e.clientY - window.innerHeight / 2) * 0.005;
+      
+      document.querySelector('.card').style.transform = 
+        `translate(${moveX * 5}px, ${moveY * 5}px)`;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!-- src/views/dashboard.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Mountain Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-color: #6c5ce7;
+      --primary-hover: #5541e0;
+      --secondary-color: #a29bfe;
+      --dark-purple: #2c2157;
+      --light-color: #f9fafb;
+      --danger-color: #e84393;
+      --success-color: #00b894;
+      --border-color: rgba(255, 255, 255, 0.2);
+      --text-color: #fff;
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      line-height: 1.5;
+      color: var(--text-color);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #a7b3df 0%, #6c5ce7 50%, #2c2157 100%);
+      background-size: cover;
+      background-attachment: fixed;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Dashboard Container */
+    .dashboard-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Header */
+    .dashboard-header {
+      background-color: rgba(44, 33, 87, 0.8);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 1px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .username {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .role {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      user-select: none;
+      border: 1px solid transparent;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: 2rem;
+      transition: all 0.15s ease-in-out;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+    }
+
+    .btn-outline {
+      color: white;
+      background-color: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-outline:hover {
+      color: var(--dark-purple);
+      background-color: white;
+      border-color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Main Content */
+    .dashboard-main {
+      flex: 1;
+      padding: 3rem 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Welcome Card */
+    .welcome-card {
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      padding: 3rem;
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .welcome-card h1 {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-card p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+    }
+
+    /* Admin Badge */
+    .admin-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      color: white;
+      font-weight: bold;
+      padding: 5px 15px;
+      border-radius: 20px;
+      margin-top: 10px;
+      box-shadow: 0 3px 10px rgba(108, 92, 231, 0.5);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      animation: pulseGlow 3s infinite;
+    }
+
+    /* Footer */
+    .dashboard-footer {
+      background-color: rgba(44, 33, 87, 0.8);
+      backdrop-filter: blur(5px);
+      padding: 1rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Floating Shapes */
+    .floating-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(15px);
+      z-index: -1;
+      opacity: 0.5;
+    }
+    
+    .shape-1 {
+      width: 150px;
+      height: 150px;
+      background-color: rgba(108, 92, 231, 0.7);
+      top: 20%;
+      left: 10%;
+      animation: float 15s ease-in-out infinite alternate;
+    }
+    
+    .shape-2 {
+      width: 200px;
+      height: 200px;
+      background-color: rgba(45, 52, 54, 0.5);
+      bottom: 15%;
+      right: 10%;
+      animation: float 20s ease-in-out infinite alternate;
+    }
+    
+    .shape-3 {
+      width: 100px;
+      height: 100px;
+      background-color: rgba(162, 155, 254, 0.6);
+      top: 60%;
+      left: 20%;
+      animation: float 12s ease-in-out infinite alternate;
+    }
+
+    /* Mountain Background */
+    .mountain {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40vh;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .mountain::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%232c2157' fill-opacity='1' d='M0,288L48,272C96,256,192,224,288,213.3C384,203,480,213,576,229.3C672,245,768,267,864,261.3C960,256,1056,224,1152,218.7C1248,213,1344,235,1392,245.3L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3Cpath fill='%231c1540' fill-opacity='0.8' d='M0,192L30,208C60,224,120,256,180,261.3C240,267,300,245,360,224C420,203,480,181,540,186.7C600,192,660,224,720,218.7C780,213,840,171,900,170.7C960,171,1020,213,1080,218.7C1140,224,1200,192,1260,170.7C1320,149,1380,139,1410,133.3L1440,128L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+      background-position: bottom;
+      background-repeat: repeat-x;
+      background-size: cover;
+    }
+
+    /* Animations */
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      100% {
+        transform: translate(50px, 30px) rotate(10deg);
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        box-shadow: 0 0 5px rgba(108, 92, 231, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(108, 92, 231, 0.8);
+      }
+      100% {
+        box-shadow: 0 0 5px rgba(108, 92, 231, 0.5);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Mountain background -->
+    <div class="mountain"></div>
+    
+    <!-- Floating background elements -->
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+    
+    <header class="dashboard-header">
+      <div class="logo">Mountain Auth</div>
+      
+      <div class="user-info">
+        <span class="username"><%= user.username %></span>
+        <span class="role"><%= user.role %></span>
+        <a href="/auth/logout" class="btn btn-outline">Logout</a>
+      </div>
+    </header>
+    
+    <main class="dashboard-main">
+      <div class="welcome-card">
+        <% if (user.role === 'admin') { %>
+          <h1>Welcome Admin!</h1>
+          <p>You have administrator privileges on this platform.</p>
+          <div class="admin-badge">Administrator Account</div>
+        <% } else { %>
+          <h1>Welcome <%= user.username %>!</h1>
+          <p>Thanks for logging in to our beautiful authentication app.</p>
+        <% } %>
+      </div>
+    </main>
+    
+    <footer class="dashboard-footer">
+      <p>&copy; <%= new Date().getFullYear() %> Mountain Auth | Beautifully Secure</p>
+    </footer>
+  </div>
+
+  <script>
+    // Add some subtle parallax effect
+    document.addEventListener('mousemove', function(e) {
+      const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+      const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+      
+      document.querySelectorAll('.floating-shape').forEach(shape => {
+        shape.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      });
+      
+      document.querySelector('.welcome-card').style.transform = 
+        `translate(${moveX * 0.5}px, ${moveY * 0.5}px)`;
+    });
+  </script>
+</body>
+</html>

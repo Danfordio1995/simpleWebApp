@@ -1,0 +1,435 @@
+/* public/css/style.css */
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #6c5ce7;
+  --primary-hover: #5541e0;
+  --secondary-color: #a29bfe;
+  --dark-purple: #2c2157;
+  --light-color: #f9fafb;
+  --danger-color: #e84393;
+  --success-color: #00b894;
+  --border-color: rgba(255, 255, 255, 0.2);
+  --text-color: #fff;
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  line-height: 1.5;
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #a7b3df 0%, #6c5ce7 50%, #2c2157 100%);
+  background-size: cover;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Mountain Background Elements */
+body::before {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40vh;
+  background: url('/img/mountain-silhouette.svg') bottom center repeat-x;
+  background-size: cover;
+  z-index: -1;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30vh;
+  background: url('/img/clouds.svg') top center repeat-x;
+  background-size: contain;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+/* Login and Register pages */
+.container {
+  width: 100%;
+  max-width: 450px;
+  padding: 2rem;
+  z-index: 1;
+}
+
+.card {
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.card-header {
+  padding: 2rem 1.5rem 1rem;
+  text-align: center;
+}
+
+.title {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-footer {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.card-footer a {
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.card-footer a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.error-card {
+  border-top: 4px solid var(--danger-color);
+}
+
+/* Form elements */
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: white;
+  opacity: 0.9;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--border-color);
+  border-radius: 2rem;
+  transition: all 0.15s ease-in-out;
+  backdrop-filter: blur(5px);
+}
+
+.form-control:focus {
+  border-color: white;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Input Icons */
+.form-group::before {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  top: 2.4rem;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+}
+
+.form-group.username::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' /%3E%3C/svg%3E");
+}
+
+.form-group.password::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' /%3E%3C/svg%3E");
+}
+
+.form-group.email::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' /%3E%3C/svg%3E");
+}
+
+/* Remember me checkbox */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-right: 0.5rem;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.checkbox-container label {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+}
+
+.forgot-password {
+  margin-left: auto;
+  font-size: 0.95rem;
+  color: white;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.forgot-password:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 2rem;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  width: 100%;
+  color: white;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 10px rgba(108, 92, 231, 0.5);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(108, 92, 231, 0.6);
+}
+
+.btn-outline {
+  color: white;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline:hover {
+  color: var(--dark-purple);
+  background-color: white;
+  border-color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Alerts */
+.alert {
+  position: relative;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  font-weight: 500;
+}
+
+.alert-danger {
+  color: #fff;
+  background-color: rgba(232, 67, 147, 0.2);
+  border-color: rgba(232, 67, 147, 0.4);
+  backdrop-filter: blur(5px);
+}
+
+.alert-success {
+  color: #fff;
+  background-color: rgba(0, 184, 148, 0.2);
+  border-color: rgba(0, 184, 148, 0.4);
+  backdrop-filter: blur(5px);
+}
+
+/* Dashboard styles */
+.dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  background: linear-gradient(180deg, #a7b3df 0%, #6c5ce7 50%, #2c2157 100%);
+  background-attachment: fixed;
+}
+
+.dashboard-header {
+  background-color: rgba(44, 33, 87, 0.8);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.username {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.role {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.dashboard-main {
+  flex: 1;
+  padding: 3rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-card {
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+  color: white;
+}
+
+.welcome-card h1 {
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-card p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.dashboard-footer {
+  background-color: rgba(44, 33, 87, 0.8);
+  backdrop-filter: blur(5px);
+  padding: 1rem 2rem;
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .card {
+    border-radius: 1rem;
+  }
+
+  .card-header {
+    padding: 1.5rem 1rem 0.5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .welcome-card {
+    padding: 2rem;
+  }
+
+  .welcome-card h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Animation for Background Elements */
+@keyframes floatClouds {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.cloud {
+  position: absolute;
+  opacity: 0.6;
+  animation: floatClouds 80s linear infinite;
+}

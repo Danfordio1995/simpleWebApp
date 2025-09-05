@@ -1,0 +1,423 @@
+<!-- src/views/login.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Mountain Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-color: #6c5ce7;
+      --primary-hover: #5541e0;
+      --secondary-color: #a29bfe;
+      --dark-purple: #2c2157;
+      --light-color: #f9fafb;
+      --danger-color: #e84393;
+      --success-color: #00b894;
+      --border-color: rgba(255, 255, 255, 0.2);
+      --text-color: #fff;
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      line-height: 1.5;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #a7b3df 0%, #6c5ce7 50%, #2c2157 100%);
+      background-size: cover;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Login and Register pages */
+    .container {
+      width: 100%;
+      max-width: 450px;
+      padding: 2rem;
+      z-index: 1;
+    }
+
+    .card {
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      position: relative;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.5s ease;
+    }
+
+    .card-header {
+      padding: 2rem 1.5rem 1rem;
+      text-align: center;
+    }
+
+    .title {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-footer {
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.95rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .card-footer a {
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .card-footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* Form elements */
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: white;
+      opacity: 0.9;
+    }
+
+    .form-control {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: white;
+      background-color: rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--border-color);
+      border-radius: 2rem;
+      transition: all 0.15s ease-in-out;
+      backdrop-filter: blur(5px);
+    }
+
+    .form-control:focus {
+      border-color: white;
+      outline: 0;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Input Icons */
+    .form-group.username::before {
+      content: '';
+      position: absolute;
+      left: 1rem;
+      top: 2.4rem;
+      width: 20px;
+      height: 20px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.8;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' /%3E%3C/svg%3E");
+    }
+
+    .form-group.password::before {
+      content: '';
+      position: absolute;
+      left: 1rem;
+      top: 2.4rem;
+      width: 20px;
+      height: 20px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.8;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' /%3E%3C/svg%3E");
+    }
+
+    /* Checkbox and Remember Me */
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      margin-right: 0.5rem;
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+    }
+
+    .checkbox-container label {
+      margin-bottom: 0;
+      font-size: 0.95rem;
+    }
+
+    .forgot-password {
+      margin-left: auto;
+      font-size: 0.95rem;
+      color: white;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .forgot-password:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      user-select: none;
+      border: 1px solid transparent;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: 2rem;
+      transition: all 0.15s ease-in-out;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      color: white;
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      box-shadow: 0 4px 10px rgba(108, 92, 231, 0.5);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      border-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(108, 92, 231, 0.6);
+    }
+
+    /* Alerts */
+    .alert {
+      position: relative;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid transparent;
+      border-radius: 0.75rem;
+      font-weight: 500;
+    }
+
+    .alert-danger {
+      color: #fff;
+      background-color: rgba(232, 67, 147, 0.2);
+      border-color: rgba(232, 67, 147, 0.4);
+      backdrop-filter: blur(5px);
+    }
+
+    .alert-success {
+      color: #fff;
+      background-color: rgba(0, 184, 148, 0.2);
+      border-color: rgba(0, 184, 148, 0.4);
+      backdrop-filter: blur(5px);
+    }
+
+    /* Mountain Background */
+    .mountain {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40vh;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .mountain::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%232c2157' fill-opacity='1' d='M0,288L48,272C96,256,192,224,288,213.3C384,203,480,213,576,229.3C672,245,768,267,864,261.3C960,256,1056,224,1152,218.7C1248,213,1344,235,1392,245.3L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3Cpath fill='%231c1540' fill-opacity='0.8' d='M0,192L30,208C60,224,120,256,180,261.3C240,267,300,245,360,224C420,203,480,181,540,186.7C600,192,660,224,720,218.7C780,213,840,171,900,170.7C960,171,1020,213,1080,218.7C1140,224,1200,192,1260,170.7C1320,149,1380,139,1410,133.3L1440,128L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+      background-position: bottom;
+      background-repeat: repeat-x;
+      background-size: cover;
+    }
+
+    /* Birds */
+    .bird {
+      position: absolute;
+      width: 15px;
+      height: 10px;
+      background: transparent;
+      opacity: 0.7;
+      transform: rotate(-10deg);
+    }
+    
+    .bird:before, .bird:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 10px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    
+    .bird:before {
+      left: 0;
+      transform: skewX(30deg);
+    }
+    
+    .bird:after {
+      right: 0;
+      transform: skewX(-30deg);
+    }
+    
+    .bird:nth-child(1) {
+      top: 15%;
+      right: 15%;
+      color: #fff;
+      animation: birdFly1 15s linear infinite;
+    }
+    
+    .bird:nth-child(2) {
+      top: 25%;
+      right: 35%;
+      color: #fff;
+      animation: birdFly2 20s linear infinite;
+    }
+    
+    .bird:nth-child(3) {
+      top: 20%;
+      right: 25%;
+      color: #fff;
+      animation: birdFly3 17s linear infinite;
+    }
+    
+    @keyframes birdFly1 {
+      0% { transform: translate(100vw, 0) rotate(-10deg); }
+      100% { transform: translate(-100vw, -50px) rotate(-10deg); }
+    }
+    
+    @keyframes birdFly2 {
+      0% { transform: translate(100vw, 0) rotate(-5deg); }
+      100% { transform: translate(-100vw, -30px) rotate(-5deg); }
+    }
+    
+    @keyframes birdFly3 {
+      0% { transform: translate(100vw, 0) rotate(-15deg); }
+      100% { transform: translate(-100vw, -70px) rotate(-15deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Birds in the sky -->
+  <div class="bird"></div>
+  <div class="bird"></div>
+  <div class="bird"></div>
+  
+  <!-- Mountain background -->
+  <div class="mountain"></div>
+  
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h1 class="title">Login</h1>
+      </div>
+      
+      <div class="card-body">
+        <% if (error) { %>
+          <div class="alert alert-danger">
+            <%= error %>
+          </div>
+        <% } %>
+        
+        <% if (typeof registered !== 'undefined' && registered) { %>
+          <div class="alert alert-success">
+            Registration successful! You can now log in.
+          </div>
+        <% } %>
+        
+        <form action="/auth/login" method="POST">
+          <div class="form-group username">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required autofocus>
+          </div>
+          
+          <div class="form-group password">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+          </div>
+          
+          <div class="checkbox-container">
+            <input type="checkbox" id="remember" name="remember">
+            <label for="remember">Remember me</label>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+          </div>
+          
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
+        </form>
+      </div>
+      
+      <div class="card-footer">
+        <p>Don't have an account? <a href="/auth/register">Register</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Add some animation to the login form
+    document.addEventListener('DOMContentLoaded', function() {
+      const card = document.querySelector('.card');
+      setTimeout(() => {
+        card.style.transform = 'translateY(0)';
+        card.style.opacity = '1';
+      }, 100);
+    });
+  </script>
+</body>
+</html>
