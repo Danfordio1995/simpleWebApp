@@ -11,9 +11,12 @@ exports.getDashboard = async (req, res) => {
     
     // Count users by role
     const adminCount = await User.countDocuments({ role: 'admin' });
+    const userCount2 = await User.countDocuments({ role: 'user' });
+    
+    // Create an array with role counts that won't return undefined
     const usersByRole = [
-      { role: 'Admin', count: adminCount },
-      { role: 'Regular User', count: userCount - adminCount }
+      { role: 'admin', count: adminCount || 0 },
+      { role: 'user', count: userCount2 || 0 }
     ];
     
     // Get latest registered users
@@ -23,7 +26,7 @@ exports.getDashboard = async (req, res) => {
     
     res.render('admin/dashboard', {
       user: req.session.user,
-      userCount,
+      userCount: userCount || 0,
       usersByRole,
       latestUsers,
       error: null
