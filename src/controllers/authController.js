@@ -17,29 +17,64 @@ module.exports = {
   },
 
   // Process login
-  postLogin: async (req, res) => {
-    try {
-      const { username, password } = req.body;
+ // src/controllers/authController.js - Update the postLogin function
+postLogin: async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    
+    // Find user by username
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.render('login', { error: 'Invalid username or password', registered: false });
+    }
+    
+    // Check if account is locked
+    if (user.isLocked()) {
+      const lockTimeRemaining = Math.ceil((user.lockUntil - Date.now()) / 60000); // minutes
+      return res.render('login', { 
+        error: `Account is locked. Please try again in ${lockTimeRemaining} minutes.`, 
+        registered: false 
+      });
+    }
+    
+    // Check password
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      // Increment login attempts on failed login
+      await user.incrementLoginAttempts();
       
-      // Find user by username
-      const user = await User.findOne({ username });
-      if (!user) {
-        return res.render('login', { error: 'Invalid username or password', registered: false });
+      // Check if we just locked the account
+      if (user.loginAttempts + 1 >= 5) { // Using same MAX_LOGIN_ATTEMPTS value
+        return res.render('login', { 
+          error: 'Too many failed attempts. Account locked for 30 minutes.', 
+          registered: false 
+        });
       }
       
-      // Check password
-      const isMatch = await user.comparePassword(password);
-      if (!isMatch) {
-        return res.render('login', { error: 'Invalid username or password', registered: false });
-      }
+      return res.render('login', { 
+        error: 'Invalid username or password', 
+        registered: false 
+      });
+    }
+    
+    // Success! Reset login attempts
+    await user.resetLoginAttempts();
+    
+    // Check if MFA is enabled for this user
+    if (user.mfaEnabled) {
+      // Store username in session for MFA verification
+      req.session.mfaUsername = user.username;
       
-      // Set user session
-      req.session.user = {
-        id: user._id,
-        username: user.username,
-        role: user.role
-      };
-      
+      // Redirect to MFA verification page
+      return res.redirect('/auth/mfa/verify');
+    }
+    
+    // If MFA not enabled, complete login
+    req.session.user = {
+      id: user._id,
+      username: user.username,
+      role: user.role
+    }
       // Redirect to dashboard
       res.redirect('/dashboard');
     } catch (error) {
