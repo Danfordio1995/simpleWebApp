@@ -12,8 +12,8 @@ exports.getDashboard = async (req, res) => {
     // Count users by role
     const adminCount = await User.countDocuments({ role: 'admin' });
     const usersByRole = [
-      { role: 'admin', count: adminCount },
-      { role: 'user', count: userCount - adminCount }
+      { role: 'Admin', count: adminCount },
+      { role: 'Regular User', count: userCount - adminCount }
     ];
     
     // Get latest registered users
@@ -40,17 +40,12 @@ exports.getUserManagement = async (req, res) => {
     // Get all users
     const users = await User.find().sort({ createdAt: -1 });
     
-    res.send('User Management - Coming Soon');
-    
-    // Once you create the user management view, uncomment this:
-    /*
     res.render('admin/user-management', {
       user: req.session.user,
       users,
       success: req.query.success,
       error: req.query.error
     });
-    */
   } catch (err) {
     console.error('Error loading user management:', err);
     res.status(500).render('error', { error: 'Failed to load user management' });
@@ -69,9 +64,9 @@ exports.createUser = async (req, res) => {
     const { username, email, password, role } = req.body;
     
     // Check if user already exists
-    const existingUser = await User.findOne({ username });
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
-      return res.redirect('/admin/users?error=User with this username already exists');
+      return res.redirect('/admin/users?error=User with this username or email already exists');
     }
     
     // Hash password
@@ -81,8 +76,11 @@ exports.createUser = async (req, res) => {
     // Create new user
     const newUser = new User({
       username,
+      email,
       password: hashedPassword,
-      role: role || 'user'
+      role: role || 'user',
+      createdAt: new Date(),
+      updatedAt: new Date()
     });
     
     await newUser.save();
@@ -103,7 +101,7 @@ exports.updateUser = async (req, res) => {
       return res.redirect(`/admin/users?error=${encodeURIComponent(errors.array()[0].msg)}`);
     }
     
-    const { id, username, role } = req.body;
+    const { id, username, email, role, isActive } = req.body;
     
     // Check if user exists
     const user = await User.findById(id);
@@ -119,10 +117,21 @@ exports.updateUser = async (req, res) => {
       }
     }
     
+    // Check if email is already taken by another user
+    if (email !== user.email) {
+      const existingEmail = await User.findOne({ email, _id: { $ne: id } });
+      if (existingEmail) {
+        return res.redirect('/admin/users?error=Email is already in use');
+      }
+    }
+    
     // Update user
     await User.findByIdAndUpdate(id, {
       username,
-      role
+      email,
+      role,
+      isActive: isActive === 'true',
+      updatedAt: new Date()
     });
     
     res.redirect('/admin/users?success=User updated successfully');
@@ -149,7 +158,8 @@ exports.resetPassword = async (req, res) => {
     
     // Update password
     await User.findByIdAndUpdate(id, {
-      password: hashedPassword
+      password: hashedPassword,
+      updatedAt: new Date()
     });
     
     res.redirect('/admin/users?success=Password reset successfully');

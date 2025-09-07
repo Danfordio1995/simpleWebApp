@@ -1,0 +1,787 @@
+<!-- src/views/admin/user-management.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management | Mountain Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-color: #6c5ce7;
+      --primary-hover: #5541e0;
+      --secondary-color: #a29bfe;
+      --dark-purple: #2c2157;
+      --light-color: #f9fafb;
+      --danger-color: #e84393;
+      --success-color: #00b894;
+      --warning-color: #fdcb6e;
+      --border-color: rgba(255, 255, 255, 0.2);
+      --text-color: #fff;
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      line-height: 1.5;
+      color: var(--text-color);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #a7b3df 0%, #6c5ce7 50%, #2c2157 100%);
+      background-size: cover;
+      background-attachment: fixed;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Admin Container */
+    .admin-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Header */
+    .admin-header {
+      background-color: rgba(44, 33, 87, 0.8);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+
+    .admin-badge {
+      background: linear-gradient(135deg, #e84393, #fd79a8);
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 1rem;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+      position: relative;
+    }
+
+    .nav-link.active {
+      position: relative;
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: white;
+      border-radius: 1px;
+    }
+
+    .nav-link:hover {
+      opacity: 0.8;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .username {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .role {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    /* Main Content */
+    .admin-main {
+      flex: 1;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* User Management */
+    .users-container {
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .btn-create {
+      background-color: var(--success-color);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .btn-create:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+    }
+
+    .alert-success {
+      background-color: rgba(0, 184, 148, 0.2);
+      border: 1px solid rgba(0, 184, 148, 0.4);
+      color: #00b894;
+    }
+
+    .alert-danger {
+      background-color: rgba(231, 76, 60, 0.2);
+      border: 1px solid rgba(231, 76, 60, 0.4);
+      color: #e74c3c;
+    }
+
+    /* User Table */
+    .users-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .users-table th,
+    .users-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    .users-table th {
+      background-color: rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+    }
+
+    .users-table th:first-child {
+      border-top-left-radius: 0.5rem;
+    }
+
+    .users-table th:last-child {
+      border-top-right-radius: 0.5rem;
+    }
+
+    .users-table tr:last-child td:first-child {
+      border-bottom-left-radius: 0.5rem;
+    }
+
+    .users-table tr:last-child td:last-child {
+      border-bottom-right-radius: 0.5rem;
+    }
+
+    .users-table tbody tr {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .users-table tbody tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .user-role-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-admin {
+      background-color: rgba(232, 67, 147, 0.2);
+      color: #f8a5c2;
+    }
+
+    .badge-user {
+      background-color: rgba(108, 92, 231, 0.2);
+      color: #a29bfe;
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-action {
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      color: white;
+    }
+
+    .btn-edit {
+      background-color: var(--primary-color);
+    }
+
+    .btn-delete {
+      background-color: var(--danger-color);
+    }
+
+    /* Create User Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      padding: 2rem;
+      width: 100%;
+      max-width: 500px;
+      transform: translateY(20px);
+      transition: all 0.3s;
+    }
+
+    .modal.active .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .close-modal:hover {
+      opacity: 1;
+    }
+
+    .modal-body {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
+      color: white;
+      transition: all 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    .btn-modal {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-cancel {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .btn-submit {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    /* Footer */
+    .admin-footer {
+      background-color: rgba(44, 33, 87, 0.8);
+      backdrop-filter: blur(5px);
+      padding: 1rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Floating Shapes */
+    .floating-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(15px);
+      z-index: -1;
+      opacity: 0.5;
+    }
+    
+    .shape-1 {
+      width: 150px;
+      height: 150px;
+      background-color: rgba(108, 92, 231, 0.7);
+      top: 20%;
+      left: 10%;
+      animation: float 15s ease-in-out infinite alternate;
+    }
+    
+    .shape-2 {
+      width: 200px;
+      height: 200px;
+      background-color: rgba(45, 52, 54, 0.5);
+      bottom: 15%;
+      right: 10%;
+      animation: float 20s ease-in-out infinite alternate;
+    }
+    
+    .shape-3 {
+      width: 100px;
+      height: 100px;
+      background-color: rgba(162, 155, 254, 0.6);
+      top: 60%;
+      left: 20%;
+      animation: float 12s ease-in-out infinite alternate;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      100% {
+        transform: translate(50px, 30px) rotate(10deg);
+      }
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .admin-header {
+        flex-direction: column;
+        padding: 1rem;
+      }
+
+      .nav-links {
+        margin: 1rem 0;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .admin-main {
+        padding: 2rem 1rem;
+      }
+
+      .users-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Floating background elements -->
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+    
+    <header class="admin-header">
+      <a href="/dashboard" class="logo">Mountain Auth <span class="admin-badge">Admin</span></a>
+      
+      <div class="nav-links">
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/profile" class="nav-link">Profile</a>
+        <a href="/admin" class="nav-link">Admin Panel</a>
+        <a href="/admin/users" class="nav-link active">User Management</a>
+      </div>
+      
+      <div class="user-info">
+        <span class="username"><%= user.username %></span>
+        <span class="role"><%= user.role %></span>
+        <a href="/auth/logout" class="btn btn-outline">Logout</a>
+      </div>
+    </header>
+    
+    <main class="admin-main">
+      <div class="users-container">
+        <div class="section-header">
+          <h2 class="section-title">User Management</h2>
+          
+          <button id="btnCreateUser" class="btn-create">
+            + Create User
+          </button>
+        </div>
+        
+        <% if (success) { %>
+          <div class="alert alert-success">
+            <%= success %>
+          </div>
+        <% } %>
+        
+        <% if (error) { %>
+          <div class="alert alert-danger">
+            <%= error %>
+          </div>
+        <% } %>
+        
+        <div class="table-responsive">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Created At</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (users.length === 0) { %>
+                <tr>
+                  <td colspan="5" style="text-align: center;">No users found</td>
+                </tr>
+              <% } else { %>
+                <% users.forEach(user => { %>
+                  <tr>
+                    <td><%= user.username %></td>
+                    <td><%= user.email || 'N/A' %></td>
+                    <td>
+                      <span class="user-role-badge badge-<%= user.role %>">
+                        <%= user.role %>
+                      </span>
+                    </td>
+                    <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+                    <td>
+                      <div class="action-btns">
+                        <button class="btn-action btn-edit" data-id="<%= user._id %>">Edit</button>
+                        <button class="btn-action btn-delete" data-id="<%= user._id %>">Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Create User Modal -->
+      <div id="createUserModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Create New User</h3>
+            <button class="close-modal">&times;</button>
+          </div>
+          
+          <div class="modal-body">
+            <form id="createUserForm" action="/admin/users/create" method="POST">
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="role">Role</label>
+                <select id="role" name="role" class="form-control">
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" class="btn-modal btn-cancel">Cancel</button>
+                <button type="submit" class="btn-modal btn-submit">Create User</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Edit User Modal -->
+      <div id="editUserModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Edit User</h3>
+            <button class="close-modal">&times;</button>
+          </div>
+          
+          <div class="modal-body">
+            <form id="editUserForm" action="/admin/users/update" method="POST">
+              <input type="hidden" id="editUserId" name="id">
+              
+              <div class="form-group">
+                <label for="editUsername">Username</label>
+                <input type="text" id="editUsername" name="username" class="form-control" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="editEmail">Email</label>
+                <input type="email" id="editEmail" name="email" class="form-control" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="editRole">Role</label>
+                <select id="editRole" name="role" class="form-control">
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" class="btn-modal btn-cancel">Cancel</button>
+                <button type="submit" class="btn-modal btn-submit">Update User</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Reset Password Modal -->
+      <div id="resetPasswordModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Reset Password</h3>
+            <button class="close-modal">&times;</button>
+          </div>
+          
+          <div class="modal-body">
+            <form id="resetPasswordForm" action="/admin/users/reset-password" method="POST">
+              <input type="hidden" id="resetUserId" name="id">
+              
+              <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" name="password" class="form-control" required>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" class="btn-modal btn-cancel">Cancel</button>
+                <button type="submit" class="btn-modal btn-submit">Reset Password</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <footer class="admin-footer">
+      <p>&copy; <%= new Date().getFullYear() %> Mountain Auth | Beautifully Secure</p>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Modal functionality
+      const modals = document.querySelectorAll('.modal');
+      const btnCreateUser = document.getElementById('btnCreateUser');
+      const closeBtns = document.querySelectorAll('.close-modal, .btn-cancel');
+      
+      // Open create user modal
+      btnCreateUser.addEventListener('click', function() {
+        document.getElementById('createUserModal').classList.add('active');
+      });
+      
+      // Close modals
+      closeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          modals.forEach(modal => {
+            modal.classList.remove('active');
+          });
+        });
+      });
+      
+      // Close modal when clicking outside
+      modals.forEach(modal => {
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            modal.classList.remove('active');
+          }
+        });
+      });
+      
+      // Edit user functionality
+      const editBtns = document.querySelectorAll('.btn-edit');
+      editBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const userId = this.getAttribute('data-id');
+          // In a real app, fetch user details from API
+          // For now, just open the modal with empty fields
+          document.getElementById('editUserId').value = userId;
+          document.getElementById('editUserModal').classList.add('active');
+        });
+      });
+      
+      // Delete user functionality
+      const deleteBtns = document.querySelectorAll('.btn-delete');
+      deleteBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const userId = this.getAttribute('data-id');
+          if (confirm('Are you sure you want to delete this user?')) {
+            window.location.href = `/admin/users/delete/${userId}`;
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
