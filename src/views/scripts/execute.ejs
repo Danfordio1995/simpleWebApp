@@ -1,0 +1,271 @@
+<!-- src/views/scripts/execute.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Execute Script | Mountain Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Script execution specific styles */
+    .execute-container {
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    .execute-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+    
+    .execute-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .back-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .back-button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .script-info {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+    }
+    
+    .script-description {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    
+    .parameters-form {
+      margin-top: 2rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .required-mark {
+      color: var(--danger-color);
+      margin-left: 0.25rem;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
+      color: white;
+      transition: all 0.2s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+    }
+    
+    .form-text {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.875rem;
+      opacity: 0.7;
+    }
+    
+    .submit-button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .submit-button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+    }
+    
+    .form-check {
+      margin-right: 0.5rem;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+    
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <a href="/dashboard" class="logo">Mountain Auth</a>
+      
+      <div class="nav-links">
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/scripts" class="nav-link active">Scripts</a>
+        <a href="/scripts/history" class="nav-link">Execution History</a>
+        <% if (user.role === 'admin') { %>
+          <a href="/admin" class="nav-link">Admin</a>
+        <% } %>
+      </div>
+      
+      <div class="user-info">
+        <span class="username"><%= user.username %></span>
+        <span class="role"><%= user.role %></span>
+        <a href="/auth/logout" class="btn btn-outline">Logout</a>
+      </div>
+    </header>
+    
+    <main class="admin-main">
+      <div class="execute-container">
+        <div class="execute-header">
+          <h2 class="execute-title">Execute Script: <%= script.name %></h2>
+          
+          <a href="/scripts" class="back-button">
+            &larr; Back to Scripts
+          </a>
+        </div>
+        
+        <div class="script-info">
+          <div class="script-description"><%= script.description %></div>
+          <div><strong>Category:</strong> <%= script.category ? script.category.name : 'Uncategorized' %></div>
+          <div><strong>Script Type:</strong> <%= script.scriptType %></div>
+        </div>
+        
+        <form class="parameters-form" action="/scripts/execute/<%= script._id %>" method="POST">
+          <h3 class="section-title">Parameters</h3>
+          
+          <% if (script.parameters && script.parameters.length > 0) { %>
+            <% script.parameters.forEach(param => { %>
+              <div class="form-group">
+                <label for="<%= param.name %>">
+                  <%= param.description %>
+                  <% if (param.required) { %>
+                    <span class="required-mark">*</span>
+                  <% } %>
+                </label>
+                
+                <% if (param.type === 'boolean') { %>
+                  <div class="checkbox-wrapper">
+                    <input 
+                      type="checkbox" 
+                      id="<%= param.name %>" 
+                      name="<%= param.name %>" 
+                      class="form-check"
+                      <% if (param.defaultValue === true) { %>checked<% } %>
+                    >
+                    <label for="<%= param.name %>">Enabled</label>
+                  </div>
+                <% } else if (param.type === 'number') { %>
+                  <input 
+                    type="number" 
+                    id="<%= param.name %>" 
+                    name="<%= param.name %>" 
+                    class="form-control"
+                    <% if (param.defaultValue !== null && param.defaultValue !== undefined) { %>
+                      value="<%= param.defaultValue %>"
+                    <% } %>
+                    <% if (param.required) { %>required<% } %>
+                  >
+                <% } else if (param.type === 'array') { %>
+                  <textarea 
+                    id="<%= param.name %>" 
+                    name="<%= param.name %>" 
+                    class="form-control"
+                    placeholder="Enter comma-separated values"
+                    <% if (param.required) { %>required<% } %>
+                  ><% if (param.defaultValue && Array.isArray(param.defaultValue)) { %><%= param.defaultValue.join(', ') %><% } %></textarea>
+                  <small class="form-text">Enter values separated by commas</small>
+                <% } else { %>
+                  <input 
+                    type="text" 
+                    id="<%= param.name %>" 
+                    name="<%= param.name %>" 
+                    class="form-control"
+                    <% if (param.defaultValue !== null && param.defaultValue !== undefined) { %>
+                      value="<%= param.defaultValue %>"
+                    <% } %>
+                    <% if (param.validation) { %>
+                      pattern="<%= param.validation %>"
+                    <% } %>
+                    <% if (param.required) { %>required<% } %>
+                  >
+                <% } %>
+                
+                <% if (param.validation && param.validationMessage) { %>
+                  <small class="form-text"><%= param.validationMessage %></small>
+                <% } %>
+              </div>
+            <% }); %>
+          <% } else { %>
+            <p>This script has no parameters.</p>
+          <% } %>
+          
+          <div class="form-group" style="text-align: center; margin-top: 2rem;">
+            <button type="submit" class="submit-button">Execute Script</button>
+          </div>
+        </form>
+      </div>
+    </main>
+    
+    <footer class="dashboard-footer">
+      <p>&copy; <%= new Date().getFullYear() %> Mountain Auth | Beautifully Secure</p>
+    </footer>
+  </div>
+</body>
+</html>
