@@ -20,6 +20,7 @@ const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const staticRoutes = require('./routes/staticRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const profileRoutes = require('./routes/profileRoutes');
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
@@ -44,7 +45,7 @@ app.use(helmet({
 
 // Request logging
 app.use(morgan('dev'));
-
+app.use('/profile', profileRoutes);
 // Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

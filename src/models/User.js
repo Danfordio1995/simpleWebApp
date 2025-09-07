@@ -8,7 +8,6 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true,
-    default: 'resolved@gmail.com'
   },
   username: {
     type: String,
@@ -114,6 +113,7 @@ UserSchema.pre('save', async function(next) {
 UserSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
+
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;
